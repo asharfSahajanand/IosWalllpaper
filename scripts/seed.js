@@ -25,7 +25,7 @@ const wallpaperSchema = new mongoose.Schema({
 const Wallpaper = mongoose.model("Wallpaper", wallpaperSchema);
 
 // Folder path (local)
-const folderPath = "./wallpapers";
+const folderPath = "./wallpaper";
 
 const files = fs.readdirSync(folderPath);
 
