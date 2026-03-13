@@ -1,48 +1,114 @@
+
 import { v2 as cloudinary } from "cloudinary";
 import mongoose from "mongoose";
-import fs from "fs";
-import path from "path";
 import dotenv from "dotenv";
 
-dotenv.config();
+dotenv.config({ path: "../.env" });
 
-// MongoDB connect
 await mongoose.connect(process.env.MONGO_URI);
 
-// Cloudinary config
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
   api_key: process.env.CLOUD_KEY,
   api_secret: process.env.CLOUD_SECRET,
 });
 
-// Schema
 const wallpaperSchema = new mongoose.Schema({
   title: String,
+  category: String,
   imageUrl: String,
 });
 
 const Wallpaper = mongoose.model("Wallpaper", wallpaperSchema);
 
-// Folder path (local)
-const folderPath = "./wallpapers";
+const categories = [
+  "Cars",
+  "Space",
+  "Lord",
+  "samurai",
+  "Art Gallery",
+  "Nature",
+  "Minimal",
+  "Emoji",
+  "Animals",
+  "Sport",
+  "Anime",
+  "Pop Culture",
+  "Aesthetic",
+  "Love",
+  "Neon",
+  "Bike"
+];
 
-const files = fs.readdirSync(folderPath);
+for (const category of categories) {
 
-for (const file of files) {
-  const filePath = path.join(folderPath, file);
+  const result = await cloudinary.search
+  .expression(`folder="wallpaper/${category}"`)
+  .max_results(500)
+  .execute();
 
-  const result = await cloudinary.uploader.upload(filePath, {
-    folder: "wallpapers",
-  });
+  for (const img of result.resources) {
 
-  await Wallpaper.create({
-    title: file,
-    imageUrl: result.secure_url,
-  });
+    await Wallpaper.create({
+      title: img.public_id.split("/").pop(),
+      category: category,
+      imageUrl: img.secure_url
+    });
 
-  console.log("Uploaded:", file);
+    console.log("Saved:", img.secure_url);
+
+ }
 }
 
-console.log("All images uploaded 🚀");
+console.log("All images imported ??");
 process.exit();
+
+// import dotenv from "dotenv";
+// import cloudinary from "cloudinary";
+// import mongoose from "mongoose";
+// import Wallpaper from "../models/wallpaperShema";
+
+// dotenv.config({ path: "../.env" });
+
+// cloudinary.v2.config({
+//   cloud_name: process.env.CLOUD_NAME,
+//   api_key: process.env.CLOUD_KEY,
+//   api_secret: process.env.CLOUD_SECRET,
+// });
+
+// const seedMessageBG = async () => {
+//   try {
+
+//     await mongoose.connect(process.env.MONGO_URI);
+
+//     const result = await cloudinary.v2.search
+//       .expression("folder=MessageBG")
+//       .max_results(500)
+//       .execute();
+
+//     for (const img of result.resources) {
+
+//       const wallpaper = new Wallpaper({
+//         title: "Message Background",
+//         imageUrl: img.secure_url,
+//         category: "messageBG",
+//         isNew: true,
+//         isPopular: false,
+//         isPremium: false,
+//       });
+
+//       await wallpaper.save();
+
+//       console.log("Saved:", img.secure_url);
+//     }
+
+//     console.log("✅ MessageBG Images Imported");
+
+//     process.exit();
+
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
+// seedMessageBG();

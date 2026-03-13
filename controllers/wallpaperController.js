@@ -28,7 +28,7 @@ export const getWallpapers = async (req, res) => {
     const totalPages = Math.ceil(totalItems / limit);
 
     const wallpapers = await Wallpaper.find(filter)
-      .sort({ createdAt: -1 })
+      .sort({ order: 1 })
       .skip(skip)
       .limit(limit);
 
