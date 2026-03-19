@@ -21,6 +21,7 @@ const wallpaperSchema = new mongoose.Schema({
 
 const Wallpaper = mongoose.model("Wallpaper", wallpaperSchema);
 
+
 const categories = [
   "Cars",
   "Space",
@@ -39,6 +40,10 @@ const categories = [
   "Neon",
   "Bike"
 ];
+
+
+const folderPath = "./wallpaper";
+
 
 for (const category of categories) {
 
@@ -112,3 +117,4 @@ process.exit();
 // };
 
 // seedMessageBG();
+
