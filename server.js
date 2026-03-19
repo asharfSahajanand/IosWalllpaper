@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./config/db.js";
 import wallpaperRoutes from "./routes/wallpaperRoutes.js";
-
+import contactPosterRotes from "./routes/contactPosterRoute.js";
 dotenv.config();
 
 const app = express();
@@ -17,6 +17,7 @@ app.use(express.json());
 
 // Routes
 app.use("/api/wallpapers", wallpaperRoutes);
+app.use("/api/poster", contactPosterRotes);
 
 app.get("/", (req, res) => {
   res.send("API Running 🚀");

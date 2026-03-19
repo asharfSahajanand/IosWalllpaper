@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 const wallpaperSchema = new mongoose.Schema(
   {
     title: {
@@ -31,3 +33,6 @@ const wallpaperSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+const Wallpaper = mongoose.model("wallpapers", wallpaperSchema);
+export default Wallpaper;
